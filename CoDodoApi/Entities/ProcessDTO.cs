@@ -22,8 +22,8 @@ class ProcessDTO(string name,
     public int HourlyRateInSEK { get; set; } = hourlyRateInSEK;
     public DateTimeOffset UpdatedDate { get; set; } = updatedDate;
     public DateTimeOffset CreatedDate { get; set; } = createdDate;
-    public int DaysSinceUpdate { get; set; } = daysSinceUpdate;
-    public int DaysSinceCreation { get; set; } = daysSinceCreation;
+    public int DaysSinceUpdate { get; set; } = daysSinceUpdate; //not in use
+    public int DaysSinceCreation { get; set; } = daysSinceCreation; //not in use
 }
 
 public static class ProcessDtoExtensions

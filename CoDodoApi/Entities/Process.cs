@@ -56,19 +56,19 @@ internal static class ProcessExtensions
 {
     public static ProcessDTO ToDto(this Process process)
     {
-        Process p = process;
-        Opportunity oppertunity = p.Opportunity;
+        //Process p = process;
+        Opportunity opportunity = process.Opportunity;
 
-        return new ProcessDTO(p.Name,
-            oppertunity.UriForAssignment,
-            oppertunity.Company,
-            oppertunity.Capability,
-            p.Status,
-            oppertunity.NameOfSalesLead,
-            oppertunity.HourlyRateInSEK,
-            p.UpdatedDate,
-            p.CreatedDate,
-            p.DaysSinceUpdate(),
-            p.DaysSinceCreation());
+        return new ProcessDTO(process.Name,
+            opportunity.UriForAssignment,
+            opportunity.Company,
+            opportunity.Capability,
+            process.Status,
+            opportunity.NameOfSalesLead,
+            opportunity.HourlyRateInSEK,
+            process.UpdatedDate,
+            process.CreatedDate,
+            process.DaysSinceUpdate(),
+            process.DaysSinceCreation());
     }
 }

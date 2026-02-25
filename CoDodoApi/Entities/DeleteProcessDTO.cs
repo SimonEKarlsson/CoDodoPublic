@@ -3,7 +3,7 @@
 public sealed class DeleteProcessDTO
 {
     public string Name { get; set; } = string.Empty;
-    public string UriForAssignment { get; set; } = string.Empty;
+    public string UriForAssignment { get; set; } = string.Empty; //not in use
 }
 
 public static class DeleteProcessDtoExtensions
@@ -16,10 +16,10 @@ public static class DeleteProcessDtoExtensions
         string nameOfSalesLead = string.Empty;
         int hourlyRateInSEK = 0;
         Opportunity details = new(uriForAssignment, company, capability, nameOfSalesLead, hourlyRateInSEK);
-
+        string status = string.Empty;
         return new Process(dto.Name,
             details,
-            "",
+            status,
             provider.GetUtcNow(),
             provider.GetUtcNow(),
             provider);
