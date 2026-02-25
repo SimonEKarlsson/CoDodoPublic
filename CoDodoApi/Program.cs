@@ -31,9 +31,9 @@ using (IServiceScope scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseRouting();
-app.MapAllRoutes();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+app.MapAllRoutes();
 
 
 app.Run();

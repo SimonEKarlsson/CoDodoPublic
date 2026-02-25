@@ -2,16 +2,16 @@
 
 public sealed
 class ProcessDTO(string name,
-                  string uriForAssignment,
-                  string company,
-                  string capability,
-                  string status,
-                  string nameOfSalesLead,
-                  int hourlyRateInSEK,
-                  DateTimeOffset updatedDate,
-                  DateTimeOffset createdDate,
-                  int daysSinceUpdate,
-                  int daysSinceCreation)
+    string uriForAssignment,
+    string company,
+    string capability,
+    string status,
+    string nameOfSalesLead,
+    int hourlyRateInSEK,
+    DateTimeOffset updatedDate,
+    DateTimeOffset createdDate,
+    int daysSinceUpdate,
+    int daysSinceCreation)
 {
     public string Name { get; set; } = name;
     public string UriForAssignment { get; set; } = uriForAssignment;

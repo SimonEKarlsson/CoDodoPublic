@@ -1,15 +1,17 @@
 ﻿using CoDodoApi.Entities;
 using CoDodoApi.Services;
+using CoDodoApi.Services.EFService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoDodoApi;
 
-static class Endpoints
+public static class Endpoints
 {
     public static async Task<IResult> DeleteProcess([FromBody] DeleteProcessDTO dto,
         ProcessInMemoryStore store,
         TimeProvider provider,
-        ILoggerFactory logger)
+        ILoggerFactory logger,
+        CoDodoDbContext dbContext)
     {
         try
         {
@@ -30,7 +32,8 @@ static class Endpoints
     public static async Task<IResult> CreateProcess(CreateProcessDTO dto,
         ProcessInMemoryStore store,
         TimeProvider provider,
-        ILoggerFactory logger)
+        ILoggerFactory logger,
+        CoDodoDbContext dbContext)
     {
         try
         {
@@ -50,7 +53,8 @@ static class Endpoints
 
     public static async Task AllProcesses(ProcessInMemoryStore store,
         ILoggerFactory logger,
-        HttpContext context)
+        HttpContext context,
+        CoDodoDbContext dbContext)
     {
         try
         {

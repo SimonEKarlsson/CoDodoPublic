@@ -1,11 +1,13 @@
 ﻿using ClosedXML.Excel;
 using CoDodoApi.Entities;
+using CoDodoApi.Services.EFService;
 
 namespace CoDodoApi.Services;
 
 public record ExcelImporter(ProcessInMemoryStore Store,
-                            TimeProvider Provider,
-                            ILogger<ExcelImporter> Logger)
+    TimeProvider Provider,
+    ILogger<ExcelImporter> Logger,
+        CoDodoDbContext dbContext)
 {
     readonly ProcessInMemoryStore store = Store;
     readonly TimeProvider timeProvider = Provider;

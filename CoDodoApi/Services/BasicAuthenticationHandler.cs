@@ -12,8 +12,8 @@ public class BasicAuthenticationHandler(
     UrlEncoder encoder)
     :
     AuthenticationHandler<AuthenticationSchemeOptions>(options,
-                                                       logger,
-                                                       encoder)
+        logger,
+        encoder)
 {
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
