@@ -11,4 +11,8 @@ app.MapPost("WonOpportunities", (WonOpportunity _) => _);
 
 app.Run();
 
-class WonOpportunity(string Name, string Uri);
+class WonOpportunity(string name, string uri)
+{
+    public string Name { get; } = name;
+    public string Uri { get; } = uri;
+}

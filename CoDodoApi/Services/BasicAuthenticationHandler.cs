@@ -9,27 +9,26 @@ namespace CoDodoApi.Services;
 public class BasicAuthenticationHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,
-    UrlEncoder encoder) 
-    : 
-    AuthenticationHandler<AuthenticationSchemeOptions>(options, 
-                                                       logger, 
+    UrlEncoder encoder)
+    :
+    AuthenticationHandler<AuthenticationSchemeOptions>(options,
+                                                       logger,
                                                        encoder)
 {
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         string authHeader = Request.Headers.Authorization.ToString();
 
-        if (authHeader is null 
-            || !authHeader.StartsWith("basic", 
-                    StringComparison.OrdinalIgnoreCase))
+        bool isMissingAuthHeader = string.IsNullOrEmpty(authHeader);
+        bool isNotBasicAuth = !authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase);
+        if (isMissingAuthHeader || isNotBasicAuth)
+        {
             return Fail();
+        }
 
         string[] credentials = Credentials(authHeader);
 
-        if (credentials[0] != "admin" || credentials[1] != "password")
-            return Fail();
-
-        return Success(credentials);
+        return credentials[0] != "admin" || credentials[1] != "password" ? Fail() : Success(credentials);
     }
 
     private static string[] Credentials(string authHeader)
@@ -42,8 +41,8 @@ public class BasicAuthenticationHandler(
 
     private Task<AuthenticateResult> Success(string[] credentials)
     {
-        Claim name = new ("name", credentials[0]);
-        Claim role = new (ClaimTypes.Role, "Admin");
+        Claim name = new("name", credentials[0]);
+        Claim role = new(ClaimTypes.Role, "Admin");
 
         Claim[] claims = [name, role];
 
@@ -59,7 +58,7 @@ public class BasicAuthenticationHandler(
     private Task<AuthenticateResult> Fail()
     {
         Response.StatusCode = 401;
-        Response.Headers.Append("WWW-Authenticate", 
+        Response.Headers.Append("WWW-Authenticate",
             """
             Basic realm="CoDodoApiRealm"
             """);

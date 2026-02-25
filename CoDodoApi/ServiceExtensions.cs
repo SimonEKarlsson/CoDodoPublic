@@ -6,7 +6,7 @@ namespace CoDodoApi;
 
 public static class ServiceExtensions
 {
-    public static 
+    public static
     WebApplicationBuilder AddConfiguredSerilog(
         this WebApplicationBuilder builder)
     {
@@ -21,7 +21,7 @@ public static class ServiceExtensions
         return builder;
     }
 
-    public static 
+    public static
     IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -30,7 +30,7 @@ public static class ServiceExtensions
         return services;
     }
 
-    public static 
+    public static
     IServiceCollection AddConfiguredCors(this IServiceCollection services)
     {
         services.AddCors(o => o
@@ -42,7 +42,7 @@ public static class ServiceExtensions
         return services;
     }
 
-    public static 
+    public static
     IServiceCollection AddConfiguredAuthentication(
         this IServiceCollection services)
     {

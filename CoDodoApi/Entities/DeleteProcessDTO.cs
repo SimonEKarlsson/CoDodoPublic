@@ -2,22 +2,26 @@
 
 public sealed class DeleteProcessDTO
 {
-    public string Name { get; set; } = "";
-    public string UriForAssignment { get; set; } = "";
+    public string Name { get; set; } = string.Empty;
+    public string UriForAssignment { get; set; } = string.Empty;
 }
 
 public static class DeleteProcessDtoExtensions
 {
-    public static 
-    Process ToProcess(this DeleteProcessDTO dto, TimeProvider provider)
+    public static Process ToProcess(this DeleteProcessDTO dto, TimeProvider provider)
     {
-        Opportunity details = new("", "", "", "", 0);
+        string uriForAssignment = string.Empty;
+        string company = string.Empty;
+        string capability = string.Empty;
+        string nameOfSalesLead = string.Empty;
+        int hourlyRateInSEK = 0;
+        Opportunity details = new(uriForAssignment, company, capability, nameOfSalesLead, hourlyRateInSEK);
 
         return new Process(dto.Name,
-                           details,
-                           "",
-                           provider.GetUtcNow(),
-                           provider.GetUtcNow(),
-                           provider);
+            details,
+            "",
+            provider.GetUtcNow(),
+            provider.GetUtcNow(),
+            provider);
     }
 }

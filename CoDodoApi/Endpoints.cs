@@ -6,19 +6,18 @@ namespace CoDodoApi;
 
 static class Endpoints
 {
-    public static async
-    Task<IResult> DeleteProcess([FromBody] DeleteProcessDTO dto,
-                                ProcessInMemoryStore store,
-                                TimeProvider provider,
-                                ILoggerFactory logger)
+    public static async Task<IResult> DeleteProcess([FromBody] DeleteProcessDTO dto,
+        ProcessInMemoryStore store,
+        TimeProvider provider,
+        ILoggerFactory logger)
     {
         try
         {
             Process process = dto.ToProcess(provider);
 
-            Process r = await store.Delete(process).ConfigureAwait(false);
+            Process result = await store.Delete(process).ConfigureAwait(false);
 
-            return OkProcessDto(r);
+            return OkProcessDto(result);
         }
         catch (Exception ex)
         {
@@ -28,19 +27,18 @@ static class Endpoints
         }
     }
 
-    public static async
-    Task<IResult> CreateProcess(CreateProcessDTO dto,
-                                ProcessInMemoryStore store,
-                                TimeProvider provider,
-                                ILoggerFactory logger)
+    public static async Task<IResult> CreateProcess(CreateProcessDTO dto,
+        ProcessInMemoryStore store,
+        TimeProvider provider,
+        ILoggerFactory logger)
     {
         try
         {
             Process process = dto.ToProcess(provider);
 
-            Process r = await store.Add(process);
+            Process result = await store.Add(process);
 
-            return OkProcessDto(r);
+            return OkProcessDto(result);
         }
         catch (Exception ex)
         {
@@ -50,18 +48,17 @@ static class Endpoints
         }
     }
 
-    public static async
-    Task AllProcesses(ProcessInMemoryStore store,
-                      ILoggerFactory logger,
-                      HttpContext context)
+    public static async Task AllProcesses(ProcessInMemoryStore store,
+        ILoggerFactory logger,
+        HttpContext context)
     {
         try
         {
-            Process[] r = await store.GetAll().ConfigureAwait(false);
+            Process[] result = await store.GetAll().ConfigureAwait(false);
 
             context.Response.StatusCode = 200;
 
-            await context.Response.WriteAsJsonAsync(r);
+            await context.Response.WriteAsJsonAsync(result);
         }
         catch (Exception ex)
         {
@@ -72,14 +69,14 @@ static class Endpoints
         }
     }
 
-    static IResult OkProcessDto(Process process)
+    private static IResult OkProcessDto(Process process)
     {
         ProcessDTO dto = process.ToDto();
 
         return TypedResults.Ok(dto);
     }
 
-    static IResult OkProcessesDto(Process[] processes)
+    private static IResult OkProcessesDto(Process[] processes)
     {
         ProcessDTO[] dtos = processes
             .Select(p => p.ToDto())
@@ -88,8 +85,7 @@ static class Endpoints
         return TypedResults.Ok(dtos);
     }
 
-    public static 
-    IResult ImportExcel(IFormFile file, ExcelImporter importer)
+    public static IResult ImportExcel(IFormFile file, ExcelImporter importer)
     {
         try
         {
