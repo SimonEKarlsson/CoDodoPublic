@@ -6,6 +6,7 @@ namespace CoDodoApi.Services.EFService
     [Table("Proceses")]
     public class EFProcess()
     {
+        //Base properties of Process
         [Key]
         [Column("Id")]
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -13,34 +14,29 @@ namespace CoDodoApi.Services.EFService
         [Column("Name")]
         public string Name { get; set; } = string.Empty;
 
+        [Column("Status")]
+        public string Status { get; set; } = string.Empty;
+
+        [Column("UpdatedDate")]
+        public DateTime UpdatedDate { get; set; }
+
+        [Column("CreatedDate")]
+        public DateTime CreatedDate { get; set; }
+
+        //base properties of Opportunity
+        [Column("UriForAssignment")]
+        public string UriForAssignment { get; set; } = string.Empty;
+
+        [Column("Company")]
+        public string Company { get; set; } = string.Empty;
+
         [Column("Capability")]
         public string Capability { get; set; } = string.Empty;
 
-        [Column("Opportunity")]
-        public string Opportunity { get; set; } = string.Empty;
+        [Column("NameOFSalesLead")]
+        public string NameOfSalesLead { get; set; } = string.Empty;
 
-        [Column("Status")]
-        public Status Status { get; set; }
-
-        [Column("SalesLead")]
-        public string SalesLead { get; set; } = string.Empty;
-
-        [Column("HourlyRate")]
-        public int HourlyRate { get; set; }
-
-        [Column("LastUpdate")]
-        public DateOnly LastUpdate { get; set; }
-
-        [Column("GenerationDate")]
-        public DateOnly GenerationDate { get; set; }
-    }
-
-    public enum Status
-    {
-        LOST,
-        ASSIGNED,
-        INTERVIEW,
-        PROSPECT,
-        OFFERED,
+        [Column("HourlyRateInSEK")]
+        public int HourlyRateInSEK { get; set; }
     }
 }
