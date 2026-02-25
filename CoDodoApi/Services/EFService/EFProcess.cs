@@ -1,16 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CoDodoApi.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoDodoApi.Services.EFService
 {
-    [Table("Proceses")]
+    [Table("Processes")]
     public class EFProcess()
     {
-        //Base properties of Process
-        [Key]
-        [Column("Id")]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
         [Column("Name")]
         public string Name { get; set; } = string.Empty;
 
@@ -18,12 +13,11 @@ namespace CoDodoApi.Services.EFService
         public string Status { get; set; } = string.Empty;
 
         [Column("UpdatedDate")]
-        public DateTime UpdatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
 
         [Column("CreatedDate")]
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
-        //base properties of Opportunity
         [Column("UriForAssignment")]
         public string UriForAssignment { get; set; } = string.Empty;
 
@@ -38,5 +32,39 @@ namespace CoDodoApi.Services.EFService
 
         [Column("HourlyRateInSEK")]
         public int HourlyRateInSEK { get; set; }
+    }
+
+    public static class CreateEFProcessExtensions
+    {
+        public static EFProcess ToEFProcess(this Process process)
+        {
+            return new EFProcess
+            {
+                Name = process.Name,
+                Status = process.Status,
+                UpdatedDate = process.UpdatedDate,
+                CreatedDate = process.CreatedDate,
+                UriForAssignment = process.Opportunity.UriForAssignment,
+                Company = process.Opportunity.Company,
+                Capability = process.Opportunity.Capability,
+                NameOfSalesLead = process.Opportunity.NameOfSalesLead,
+                HourlyRateInSEK = process.Opportunity.HourlyRateInSEK,
+            };
+        }
+
+        public static Process ToProcess(this EFProcess efProcess, TimeProvider provider)
+        {
+            Opportunity opportunity = new(efProcess.UriForAssignment,
+                efProcess.Company,
+                efProcess.Capability,
+                efProcess.NameOfSalesLead,
+                efProcess.HourlyRateInSEK);
+            return new Process(efProcess.Name,
+                opportunity,
+                efProcess.Status,
+                efProcess.CreatedDate,
+                efProcess.UpdatedDate,
+                provider);
+        }
     }
 }

@@ -17,9 +17,17 @@ public static class Endpoints
         {
             Process process = dto.ToProcess(provider);
 
-            Process result = await store.Delete(process).ConfigureAwait(false);
+            EFProcess? dbProcess = await dbContext.Processes.FindAsync(dto.Name, dto.UriForAssignment);
 
-            return OkProcessDto(result);
+            if (dbProcess is null)
+            {
+                return TypedResults.NotFound($"Process with name {process.Name} and UriForAssignment {process.Opportunity.UriForAssignment} not found.");
+            }
+
+            dbContext.Processes.Remove(dbProcess);
+            await dbContext.SaveChangesAsync();
+
+            return TypedResults.Ok(dbProcess.ToProcess(provider).ToDto());
         }
         catch (Exception ex)
         {
@@ -39,9 +47,10 @@ public static class Endpoints
         {
             Process process = dto.ToProcess(provider);
 
-            Process result = await store.Add(process);
+            await dbContext.Processes.AddAsync(process.ToEFProcess());
+            await dbContext.SaveChangesAsync();
 
-            return OkProcessDto(result);
+            return TypedResults.Created(string.Empty, process.ToDto());
         }
         catch (Exception ex)
         {
@@ -51,51 +60,33 @@ public static class Endpoints
         }
     }
 
-    public static async Task AllProcesses(ProcessInMemoryStore store,
+    public static async Task<IResult> AllProcesses(ProcessInMemoryStore store,
         ILoggerFactory logger,
+        TimeProvider provider,
         HttpContext context,
         CoDodoDbContext dbContext)
     {
         try
         {
-            Process[] result = await store.GetAll().ConfigureAwait(false);
-
-            context.Response.StatusCode = 200;
-
-            await context.Response.WriteAsJsonAsync(result);
+            Process[] result = await dbContext.GetAllProcesses(provider);
+            ProcessDTO[] dtos = [.. result.Select(p => p.ToDto())];
+            return TypedResults.Ok(dtos);
         }
         catch (Exception ex)
         {
             logger.CreateLogger(nameof(Endpoints))
                 .LogWarning($"Exception in {nameof(AllProcesses)}: {ex.Message}");
-
-            context.Response.StatusCode = 500;
+            return TypedResults.Problem(ex.Message);
         }
     }
 
-    private static IResult OkProcessDto(Process process)
-    {
-        ProcessDTO dto = process.ToDto();
-
-        return TypedResults.Ok(dto);
-    }
-
-    private static IResult OkProcessesDto(Process[] processes)
-    {
-        ProcessDTO[] dtos = processes
-            .Select(p => p.ToDto())
-            .ToArray();
-
-        return TypedResults.Ok(dtos);
-    }
-
-    public static IResult ImportExcel(IFormFile file, ExcelImporter importer)
+    public static async Task<IResult> ImportExcelAsync(IFormFile file, ExcelImporter importer)
     {
         try
         {
-            importer.Import(file);
+            await importer.Import(file);
 
-            return Results.Ok();
+            return Results.NoContent();
         }
         catch
         {

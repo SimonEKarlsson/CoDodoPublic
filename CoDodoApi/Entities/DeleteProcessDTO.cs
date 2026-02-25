@@ -10,12 +10,11 @@ public static class DeleteProcessDtoExtensions
 {
     public static Process ToProcess(this DeleteProcessDTO dto, TimeProvider provider)
     {
-        string uriForAssignment = string.Empty;
         string company = string.Empty;
         string capability = string.Empty;
         string nameOfSalesLead = string.Empty;
         int hourlyRateInSEK = 0;
-        Opportunity details = new(uriForAssignment, company, capability, nameOfSalesLead, hourlyRateInSEK);
+        Opportunity details = new(dto.UriForAssignment, company, capability, nameOfSalesLead, hourlyRateInSEK);
         string status = string.Empty;
         return new Process(dto.Name,
             details,

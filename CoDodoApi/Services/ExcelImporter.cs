@@ -13,7 +13,7 @@ public record ExcelImporter(ProcessInMemoryStore Store,
     readonly TimeProvider timeProvider = Provider;
     readonly ILogger logger = Logger;
 
-    public void Import(IFormFile file)
+    public async Task Import(IFormFile file)
     {
         try
         {
@@ -29,8 +29,8 @@ public record ExcelImporter(ProcessInMemoryStore Store,
                 .Skip(1)
                 .TakeWhile(x => !x.Cell(1).IsEmpty())
                 .Select(RowToProcess);
-
-            _ = processes.Select(store.Add).ToArray();
+            dbContext.Processes.AddRange(processes.Select(p => p.ToEFProcess()));
+            await dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {

@@ -2,12 +2,12 @@
 
 public static class MiddlewareExtensions
 {
-    public static 
+    public static
     WebApplication MapAllRoutes(this WebApplication app)
     {
         RouteGroupBuilder api = app.MapGroup("/api");
 
-        api.MapPost("/ImportExcel", Endpoints.ImportExcel)
+        api.MapPost("/ImportExcel", Endpoints.ImportExcelAsync)
             .DisableAntiforgery()
             .RequireAuthorization();
 
