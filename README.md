@@ -1,3 +1,9 @@
+# Notetringar
+
+ - Använder SQLServer via Entity Framerwork. Databasen behöver vara skapad men med hjälp av migrations så skpas innehållet av databasen automatiskt när API:et startar.
+ - Man behöver lägga in connectionstring till databasen i appsettings.json
+
+
 # CoDodo Test
 
 CoCreates Delivery Office(DO) har ett excel dokument kallat "Medarbetaredokument.xlsx" som de använder för att hålla koll på var i ansökningsprocessen(process) till möjliga uppdrag(opportunity) vi befinner oss.
