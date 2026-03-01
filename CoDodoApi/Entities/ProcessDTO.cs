@@ -1,7 +1,6 @@
 ﻿namespace CoDodoApi.Entities;
 
-public sealed
-class ProcessDTO(string name,
+public sealed class ProcessDTO(string name,
     string uriForAssignment,
     string company,
     string capability,
@@ -22,8 +21,8 @@ class ProcessDTO(string name,
     public int HourlyRateInSEK { get; set; } = hourlyRateInSEK;
     public DateTimeOffset UpdatedDate { get; set; } = updatedDate;
     public DateTimeOffset CreatedDate { get; set; } = createdDate;
-    public int DaysSinceUpdate { get; set; } = daysSinceUpdate; //not in use
-    public int DaysSinceCreation { get; set; } = daysSinceCreation; //not in use
+    public int DaysSinceUpdate { get; set; } = daysSinceUpdate;
+    public int DaysSinceCreation { get; set; } = daysSinceCreation;
 }
 
 public static class ProcessDtoExtensions

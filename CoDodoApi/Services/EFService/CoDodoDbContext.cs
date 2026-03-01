@@ -36,6 +36,11 @@ namespace CoDodoApi.Services.EFService
 
             return processes;
         }
+
+        public async Task<EFProcess?> GetProcessByKey(string name, string uriForAssignment)
+        {
+            return await Processes.FindAsync(name, uriForAssignment);
+        }
     }
 
     public static class AddCoDodoDbContextExtension

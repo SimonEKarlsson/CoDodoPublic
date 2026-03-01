@@ -52,6 +52,12 @@ namespace CoDodoApi.Services.EFService
             };
         }
 
+        public static void UpdateProcess(this EFProcess efProcess, UpdateProcessDTO process, TimeProvider provider)
+        {
+            efProcess.Status = process.Status;
+            efProcess.UpdatedDate = provider.GetUtcNow();
+        }
+
         public static Process ToProcess(this EFProcess efProcess, TimeProvider provider)
         {
             Opportunity opportunity = new(efProcess.UriForAssignment,

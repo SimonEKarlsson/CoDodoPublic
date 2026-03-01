@@ -3,7 +3,7 @@
 public sealed class DeleteProcessDTO
 {
     public string Name { get; set; } = string.Empty;
-    public string UriForAssignment { get; set; } = string.Empty; //not in use
+    public string UriForAssignment { get; set; } = string.Empty;
 }
 
 public static class DeleteProcessDtoExtensions

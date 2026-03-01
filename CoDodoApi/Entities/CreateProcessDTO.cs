@@ -6,11 +6,8 @@ public sealed class CreateProcessDTO
     public string UriForAssignment { get; set; } = string.Empty;
     public string Company { get; set; } = string.Empty;
     public string Capability { get; set; } = string.Empty;
-    public string Opportunity { get; set; } = string.Empty; //Not in use
-    public string Status { get; set; } = string.Empty;
     public string NameOfSalesLead { get; set; } = string.Empty;
     public int HourlyRateInSEK { get; set; }
-    public string Notes { get; set; } = string.Empty; //Not in use
 }
 
 public static class CreateProcessDtoExtensions
@@ -22,10 +19,10 @@ public static class CreateProcessDtoExtensions
             dto.Capability,
             dto.NameOfSalesLead,
             dto.HourlyRateInSEK);
-
+        string startStatus = "OFFERED";
         return new Process(dto.Name,
             opportunity,
-            dto.Status,
+            startStatus,
             provider.GetUtcNow(),
             provider.GetUtcNow(),
             provider);

@@ -19,7 +19,11 @@ public static class MiddlewareExtensions
         processes.MapPost("", Endpoints.CreateProcess)
             .RequireAuthorization();
 
-        processes.MapDelete("", Endpoints.DeleteProcess);
+        processes.MapDelete("", Endpoints.DeleteProcess)
+            .RequireAuthorization();
+
+        processes.MapPut("", Endpoints.UpdateProcess)
+            .RequireAuthorization();
 
         return app;
     }
