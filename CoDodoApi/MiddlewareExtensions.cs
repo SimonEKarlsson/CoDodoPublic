@@ -1,4 +1,5 @@
 ﻿using CoDodoApi.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoDodoApi;
 
@@ -17,7 +18,8 @@ public static class MiddlewareExtensions
             .WithDescription("Imports and processes data from an uploaded Excel file")
             .Accepts<IFormFile>("multipart/form-data")
             .Produces(200)
-            .Produces(401);
+            .Produces<ErrorDTO>(401)
+            .Produces<ProblemDetails>(500);
 
         RouteGroupBuilder processes = api.MapGroup("/processes");
 
@@ -27,7 +29,8 @@ public static class MiddlewareExtensions
             .WithSummary("Get all processes")
             .WithDescription("Retrieves a list of all processes")
             .Produces<Process[]>(200)
-            .Produces(401);
+            .Produces<ErrorDTO>(401)
+            .Produces<ProblemDetails>(500);
 
         processes.MapPost("", Endpoints.CreateProcess)
             .RequireAuthorization()
@@ -35,9 +38,9 @@ public static class MiddlewareExtensions
             .WithSummary("Create a new process")
             .WithDescription("Creates a new process with the provided details")
             .Produces<ProcessDTO>(200)
-            .Produces(401)
-            .Produces(400)
-            .Produces(500);
+            .Produces<ErrorDTO>(401)
+            .Produces<ErrorDTO>(400)
+            .Produces<ProblemDetails>(500);
 
         processes.MapDelete("", Endpoints.DeleteProcess)
             .RequireAuthorization()
@@ -45,9 +48,9 @@ public static class MiddlewareExtensions
             .WithSummary("Delete a process")
             .WithDescription("Deletes an existing process")
             .Produces<ProcessDTO>(200)
-            .Produces(401)
-            .Produces(400)
-            .Produces(500);
+            .Produces<ErrorDTO>(401)
+            .Produces<ErrorDTO>(400)
+            .Produces<ProblemDetails>(500);
 
         processes.MapPut("", Endpoints.UpdateProcess)
             .RequireAuthorization()
@@ -55,9 +58,9 @@ public static class MiddlewareExtensions
             .WithSummary("Update a process")
             .WithDescription("Updates an existing process with new details")
             .Produces<ProcessDTO>(200)
-            .Produces(401)
-            .Produces(400)
-            .Produces(500);
+            .Produces<ErrorDTO>(401)
+            .Produces<ErrorDTO>(400)
+            .Produces<ProblemDetails>(500);
 
         return app;
     }

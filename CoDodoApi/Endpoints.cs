@@ -16,7 +16,8 @@ public static class Endpoints
         {
             if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.UriForAssignment))
             {
-                return TypedResults.BadRequest("Name and UriForAssignment are required.");
+                ErrorDTO errorDto = new("Name and UriForAssignment are required.", 400);
+                return TypedResults.BadRequest(errorDto);
             }
             Process process = dto.ToProcess(provider);
 
@@ -24,7 +25,8 @@ public static class Endpoints
 
             if (dbProcess is null)
             {
-                return TypedResults.NotFound($"Process with name {process.Name} and UriForAssignment {process.Opportunity.UriForAssignment} not found.");
+                ErrorDTO errorDto = new($"Process with name {process.Name} and UriForAssignment {process.Opportunity.UriForAssignment} not found.", 404);
+                return TypedResults.NotFound(errorDto);
             }
 
             dbContext.Processes.Remove(dbProcess);
@@ -36,7 +38,13 @@ public static class Endpoints
         {
             logger.CreateLogger(nameof(Endpoints))
                 .LogWarning($"Exception in {nameof(DeleteProcess)}: {ex.Message}");
-            return TypedResults.Problem(ex.Message);
+            ProblemDetails problemDetails = new()
+            {
+                Title = "An error occurred while deleting the process.",
+                Detail = ex.Message,
+                Status = 500
+            };
+            return TypedResults.Problem(problemDetails);
         }
     }
 
@@ -49,7 +57,8 @@ public static class Endpoints
         {
             if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.UriForAssignment))
             {
-                return TypedResults.BadRequest("Name and UriForAssignment are required.");
+                ErrorDTO errorDto = new("Name and UriForAssignment are required.", 400);
+                return TypedResults.BadRequest(errorDto);
             }
             Process process = dto.ToProcess(provider);
 
@@ -62,7 +71,13 @@ public static class Endpoints
         {
             logger.CreateLogger(nameof(Endpoints))
                 .LogWarning($"Exception in {nameof(CreateProcess)}: {ex.Message}");
-            return TypedResults.Problem(ex.Message);
+            ProblemDetails problemDetails = new()
+            {
+                Title = "An error occurred while creating the process.",
+                Detail = ex.Message,
+                Status = 500
+            };
+            return TypedResults.Problem(problemDetails);
         }
     }
 
@@ -81,7 +96,13 @@ public static class Endpoints
         {
             logger.CreateLogger(nameof(Endpoints))
                 .LogWarning($"Exception in {nameof(AllProcesses)}: {ex.Message}");
-            return TypedResults.Problem(ex.Message);
+            ProblemDetails problemDetails = new()
+            {
+                Title = "An error occurred while retrieving all processes.",
+                Detail = ex.Message,
+                Status = 500
+            };
+            return TypedResults.Problem(problemDetails);
         }
     }
 
@@ -94,17 +115,20 @@ public static class Endpoints
         {
             if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.UriForAssignment))
             {
-                return TypedResults.BadRequest("Name and UriForAssignment are required.");
+                ErrorDTO errorDto = new("Name and UriForAssignment are required.", 400);
+                return TypedResults.BadRequest(errorDto);
             }
             if (!IsValidStatus(dto.Status))
             {
-                return TypedResults.BadRequest($"Invalid status: {dto.Status}. Valid statuses are: OFFERED, INTERVIEW, ASSIGNED, LOST.");
+                ErrorDTO errorDto = new($"Invalid status: {dto.Status}. Valid statuses are: OFFERED, INTERVIEW, ASSIGNED, LOST.", 400);
+                return TypedResults.BadRequest(errorDto);
             }
 
             EFProcess? dbProcess = await dbContext.Processes.FindAsync(dto.Name, dto.UriForAssignment);
             if (dbProcess is null)
             {
-                return TypedResults.NotFound($"Process with name {dto.Name} and UriForAssignment {dto.UriForAssignment} not found.");
+                ErrorDTO errorDto = new($"Process with name {dto.Name} and UriForAssignment {dto.UriForAssignment} not found.", 404);
+                return TypedResults.NotFound(errorDto);
             }
 
             dbProcess.UpdateProcess(dto, provider);
@@ -124,7 +148,13 @@ public static class Endpoints
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return TypedResults.Problem($"Failed to notify WonOpportunities service. Status code: {response.StatusCode}");
+                    ProblemDetails problemDetails = new()
+                    {
+                        Title = "An error occurred while retrieving all processes.",
+                        Detail = "Failed to notify WonOpportunities service.",
+                        Status = (int)response.StatusCode
+                    };
+                    return TypedResults.Problem(problemDetails);
                 }
             }
 
@@ -134,7 +164,13 @@ public static class Endpoints
         {
             logger.CreateLogger(nameof(Endpoints))
                 .LogWarning($"Exception in {nameof(UpdateProcess)}: {ex.Message}");
-            return TypedResults.Problem(ex.Message);
+            ProblemDetails problemDetails = new()
+            {
+                Title = "An error occurred while updating the process.",
+                Detail = ex.Message,
+                Status = 500
+            };
+            return TypedResults.Problem(problemDetails);
         }
     }
 
@@ -146,9 +182,15 @@ public static class Endpoints
 
             return Results.NoContent();
         }
-        catch
+        catch (Exception ex)
         {
-            return Results.Problem("Failed to import excel file.");
+            ProblemDetails problemDetails = new()
+            {
+                Title = "An error occurred while importing the Excel file.",
+                Detail = ex.Message,
+                Status = 500
+            };
+            return Results.Problem(problemDetails);
         }
     }
 
