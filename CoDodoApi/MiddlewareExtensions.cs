@@ -1,4 +1,6 @@
-﻿namespace CoDodoApi;
+﻿using CoDodoApi.Entities;
+
+namespace CoDodoApi;
 
 public static class MiddlewareExtensions
 {
@@ -9,21 +11,53 @@ public static class MiddlewareExtensions
 
         api.MapPost("/ImportExcel", Endpoints.ImportExcelAsync)
             .DisableAntiforgery()
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithName("ImportExcel")
+            .WithSummary("Import data from an Excel file")
+            .WithDescription("Imports and processes data from an uploaded Excel file")
+            .Accepts<IFormFile>("multipart/form-data")
+            .Produces(200)
+            .Produces(401);
 
         RouteGroupBuilder processes = api.MapGroup("/processes");
 
         processes.MapGet("", Endpoints.AllProcesses)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithName("GetAllProcesses")
+            .WithSummary("Get all processes")
+            .WithDescription("Retrieves a list of all processes")
+            .Produces<Process[]>(200)
+            .Produces(401);
 
         processes.MapPost("", Endpoints.CreateProcess)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithName("CreateProcess")
+            .WithSummary("Create a new process")
+            .WithDescription("Creates a new process with the provided details")
+            .Produces<ProcessDTO>(200)
+            .Produces(401)
+            .Produces(400)
+            .Produces(500);
 
         processes.MapDelete("", Endpoints.DeleteProcess)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithName("DeleteProcess")
+            .WithSummary("Delete a process")
+            .WithDescription("Deletes an existing process")
+            .Produces<ProcessDTO>(200)
+            .Produces(401)
+            .Produces(400)
+            .Produces(500);
 
         processes.MapPut("", Endpoints.UpdateProcess)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithName("UpdateProcess")
+            .WithSummary("Update a process")
+            .WithDescription("Updates an existing process with new details")
+            .Produces<ProcessDTO>(200)
+            .Produces(401)
+            .Produces(400)
+            .Produces(500);
 
         return app;
     }

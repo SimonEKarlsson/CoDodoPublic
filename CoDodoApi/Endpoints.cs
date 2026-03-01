@@ -14,6 +14,10 @@ public static class Endpoints
     {
         try
         {
+            if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.UriForAssignment))
+            {
+                return TypedResults.BadRequest("Name and UriForAssignment are required.");
+            }
             Process process = dto.ToProcess(provider);
 
             EFProcess? dbProcess = await dbContext.GetProcessByKey(dto.Name, dto.UriForAssignment);
@@ -43,6 +47,10 @@ public static class Endpoints
     {
         try
         {
+            if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.UriForAssignment))
+            {
+                return TypedResults.BadRequest("Name and UriForAssignment are required.");
+            }
             Process process = dto.ToProcess(provider);
 
             await dbContext.Processes.AddAsync(process.ToEFProcess());
@@ -84,6 +92,10 @@ public static class Endpoints
     {
         try
         {
+            if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.UriForAssignment))
+            {
+                return TypedResults.BadRequest("Name and UriForAssignment are required.");
+            }
             if (!IsValidStatus(dto.Status))
             {
                 return TypedResults.BadRequest($"Invalid status: {dto.Status}. Valid statuses are: OFFERED, INTERVIEW, ASSIGNED, LOST.");
